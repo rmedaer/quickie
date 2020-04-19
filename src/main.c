@@ -13,6 +13,11 @@ main(int argc, char* argv[]) {
     }
 
     // program goes here
+    extern const char _binary_quickierc_py_start, _binary_quickierc_py_end;
+    const char *start = &_binary_quickierc_py_start;
+    const char *end = &_binary_quickierc_py_end;
+
+    fwrite(start, end - start, 1, stdout);
     
     for (i = 0; i < argc; ++i) {
         PyMem_RawFree(decoded_argv[i]);
