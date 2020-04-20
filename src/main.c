@@ -35,6 +35,12 @@ main(int argc, char* argv[]) {
 
     fn = PyObject_GetAttrString(module, "read_quickierc");
     tuple = PyObject_CallObject(fn, NULL);
+    if (tuple == NULL) {
+        if (PyErr_Occurred()) {
+            PyErr_Print();
+        }
+        return 1;
+    }
 
     target_module = PyTuple_GetItem(tuple, 0);
     // TODO check target_module is a string
