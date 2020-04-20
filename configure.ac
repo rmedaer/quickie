@@ -23,10 +23,17 @@ AS_IF([test -z "$PYTHON_INCLUDE"], [
   AC_MSG_RESULT([$PYTHON_LDFLAGS])
 ])
 
+PKG_PROG_PKG_CONFIG
+
+PKG_CHECK_MODULES([CAPNG], [libcap-ng], dummy=yes)
+AC_SUBST([CAPNG_CFLAGS])
+AC_SUBST([CAPNG_LIBS])
+
 AC_PROG_CC
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
  Makefile
  src/Makefile
 ])
+
 AC_OUTPUT

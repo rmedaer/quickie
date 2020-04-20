@@ -1,12 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
+#include <cap-ng.h>
+#include <sys/prctl.h>
+#include <linux/capability.h>
 #include <Python.h>
+
+#define PR_CAP_AMBIENT 47
+#define PR_CAP_AMBIENT_IS_SET 1
+#define PR_CAP_AMBIENT_RAISE 2
+#define PR_CAP_AMBIENT_LOWER 3
+#define PR_CAP_AMBIENT_CLEAR_ALL 4
 
 extern char _binary_quickierc_py_start, _binary_quickierc_py_end;
 
 int
 main(int argc, char* argv[]) {
     int i;
+    int rc;
     wchar_t** decoded_argv;
     PyObject *module;
     PyObject *code;
@@ -39,6 +50,26 @@ main(int argc, char* argv[]) {
         if (PyErr_Occurred()) {
             PyErr_Print();
         }
+        return 1;
+    }
+
+    // Set capabilities
+    capng_get_caps_process();
+    rc = capng_update(CAPNG_ADD, CAPNG_INHERITABLE, CAP_NET_BIND_SERVICE);
+    if (rc) {
+        fprintf(stderr, "cannot add inheritable cap\n");
+        return 1;
+    }
+    capng_apply(CAPNG_SELECT_CAPS);
+
+    /* Note the two 0s at the end. Kernel checks for these */
+    if (prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BIND_SERVICE, 0, 0)) {
+        perror("cannot set cap");
+        fprintf(stderr,
+            "Please add CAP_NET_BIND_SERVICE capability with following command line:\n\n"
+            "    sudo setcap \"cap_net_bind_service+ep\" %s\n\n",
+            argv[0]
+        );
         return 1;
     }
 

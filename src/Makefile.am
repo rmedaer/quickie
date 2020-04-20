@@ -8,6 +8,6 @@ BUILT_SOURCES = quickierc.o
 CLEANFILES = quickierc.o
 
 quickie_SOURCES = main.c
-quickie_CFLAGS = -fPIC $(PYTHON_CFLAGS)
+quickie_CFLAGS = -fPIC $(PYTHON_CFLAGS) $(CAPNG_CFLAGS)
 quickie_LDFLAGS = $(PYTHON_LDFLAGS)
-quickie_LDADD = quickierc.o
+quickie_LDADD = $(CAPNG_LIBS) quickierc.o
