@@ -14,11 +14,12 @@ def find_quickierc():
         
         current_dir = parent_dir    
 
-    return os.path.join(current_dir, QUICKIERC_FILE) 
+    return current_dir, os.path.join(current_dir, QUICKIERC_FILE)
 
 def read_quickierc():
+    quickierc_dir, quickierc_path = find_quickierc()
     config = configparser.ConfigParser()
-    config.read(find_quickierc())
+    config.read(quickierc_path)
     
     try:
         main_section = config['main'] 
@@ -34,7 +35,20 @@ def read_quickierc():
     if not isinstance(paths, list):
         paths = [paths]
 
-    return (module, paths)
+    computed_paths = []
+    for path in paths:
+        if os.path.isabs(path):
+            computed_paths.append(path)
+        else:
+            computed_paths.append(os.path.abspath(os.path.join(quickierc_dir, path)))
+
+    # Automatically add path of quickierc file
+    computed_paths.append(quickierc_dir)
+
+    return (module, computed_paths)
 
 if __name__ == '__main__':
-    read_quickierc()
+    print(read_quickierc())
+
+# The last character of this file will be replaced by a \0
+# Please do not add anything after this
