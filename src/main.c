@@ -41,7 +41,7 @@ main(int argc, char* argv[]) {
     // Need to check if `ld -b binary` ends with \0
     *(&_binary_quickierc_py_end - 1) = 0;
 
-    code = Py_CompileString(&_binary_quickierc_py_start, "", Py_file_input);
+    code = Py_CompileString(&_binary_quickierc_py_start, argv[0], Py_file_input);
     module = PyImport_ExecCodeModule("quickierc", code);
 
     fn = PyObject_GetAttrString(module, "read_quickierc");
