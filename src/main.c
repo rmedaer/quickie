@@ -103,7 +103,8 @@ main(int argc, char* argv[]) {
     }
 
     PyObject* run_name_argument = Py_BuildValue("s", "__main__");
-    PyObject* run_module_arguments = PyTuple_Pack(3, target_module, Py_None, run_name_argument);
+    PyObject* init_globals_argument = Py_BuildValue("{s:S}", "__quickierc__", PyTuple_GetItem(tuple, 2));
+    PyObject* run_module_arguments = PyTuple_Pack(3, target_module, init_globals_argument, run_name_argument);
     PyObject* result = PyObject_CallObject(run_module_function, run_module_arguments);
     if (result == NULL) {
         if (PyErr_Occurred()) {

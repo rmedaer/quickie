@@ -45,7 +45,7 @@ def read_quickierc():
     # Automatically add path of quickierc file
     computed_paths.append(quickierc_dir)
 
-    return (module, computed_paths)
+    return (module, computed_paths, quickierc_path)
 
 if __name__ == '__main__':
     print(read_quickierc())
