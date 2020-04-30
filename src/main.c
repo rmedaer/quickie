@@ -12,7 +12,7 @@
 #define PR_CAP_AMBIENT_LOWER 3
 #define PR_CAP_AMBIENT_CLEAR_ALL 4
 
-extern char _binary_quickierc_py_start, _binary_quickierc_py_end;
+extern char _binary_quickieconfig_py_start, _binary_quickieconfig_py_end;
 
 int
 main(int argc, char* argv[]) {
@@ -39,12 +39,12 @@ main(int argc, char* argv[]) {
 
     // TODO explain why I'm doing this.. (and why this is bad)
     // Need to check if `ld -b binary` ends with \0
-    *(&_binary_quickierc_py_end - 1) = 0;
+    *(&_binary_quickieconfig_py_end - 1) = 0;
 
-    code = Py_CompileString(&_binary_quickierc_py_start, argv[0], Py_file_input);
-    module = PyImport_ExecCodeModule("quickierc", code);
+    code = Py_CompileString(&_binary_quickieconfig_py_start, argv[0], Py_file_input);
+    module = PyImport_ExecCodeModule("quickieconfig", code);
 
-    fn = PyObject_GetAttrString(module, "read_quickierc");
+    fn = PyObject_GetAttrString(module, "read_quickieconfig");
     tuple = PyObject_CallObject(fn, NULL);
     if (tuple == NULL) {
         if (PyErr_Occurred()) {
@@ -79,7 +79,7 @@ main(int argc, char* argv[]) {
     target_paths = PyTuple_GetItem(tuple, 1);
     // TODO check target_paths is a list
 
-    // Append paths from quickierc in Python sys.path
+    // Append paths from quickieconfig in Python sys.path
     PyObject* sys_string = Py_BuildValue("s", "sys");
     PyObject* sys_module = PyImport_Import(sys_string);
     PyObject* sys_path_array = PyObject_GetAttrString(sys_module, "path");
@@ -103,7 +103,7 @@ main(int argc, char* argv[]) {
     }
 
     PyObject* run_name_argument = Py_BuildValue("s", "__main__");
-    PyObject* init_globals_argument = Py_BuildValue("{s:S}", "__quickierc__", PyTuple_GetItem(tuple, 2));
+    PyObject* init_globals_argument = Py_BuildValue("{s:S}", "__quickieconfig__", PyTuple_GetItem(tuple, 2));
     PyObject* run_module_arguments = PyTuple_Pack(3, target_module, init_globals_argument, run_name_argument);
     PyObject* result = PyObject_CallObject(run_module_function, run_module_arguments);
     if (result == NULL) {
