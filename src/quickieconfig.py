@@ -18,7 +18,11 @@ def find_quickieconfig():
 
 def read_quickieconfig():
     quickieconfig_dir, quickieconfig_path = find_quickieconfig()
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(
+        allow_no_value=True,
+        default_section=None,
+        strict=False,
+    )
     config.read(quickieconfig_path)
     
     try:
