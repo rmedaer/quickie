@@ -35,10 +35,7 @@ def read_quickieconfig():
     except KeyError:
         raise Exception('could not find module keyword in `.quickieconfig` file')
 
-    paths = main_section.get('path', [])
-    if not isinstance(paths, list):
-        paths = [paths]
-
+    paths = list(filter(None, main_section.get('path', '').splitlines()))
     computed_paths = []
     for path in paths:
         if os.path.isabs(path):
