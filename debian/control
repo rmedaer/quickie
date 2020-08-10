@@ -2,7 +2,7 @@ Source: quickie
 Section: misc
 Priority: optional
 Maintainer: Raphael Medaer <raphael@medaer.me>
-Build-Depends: debhelper (>= 12), libpython3.7-dev, libcap-ng-dev
+Build-Depends: debhelper (>= 12), libpython3-dev, python3-dev, libcap-ng-dev
 Standards-Version: 4.1.3
 Homepage: https://github.com/rmedaer/quickie
 Vcs-Browser: https://salsa.debian.org/rmedaer/quickie
