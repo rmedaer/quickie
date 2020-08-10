@@ -18,7 +18,16 @@ AS_IF([test -z "$PYTHON_INCLUDE"], [
   AC_MSG_RESULT([$PYTHON_CFLAGS])
 
   AC_MSG_CHECKING([python ldflags])
-  PYTHON_LDFLAGS=`$PYTHON_CONFIG --ldflags`
+
+  # AC_COMPARE_VERSION from ax_compare_version.m4
+  # available in autoconf-archive package
+  AX_COMPARE_VERSION([$PYTHON_VERSION], [ge], [3.8], [
+    PYTHON_LDFLAGS=`$PYTHON_CONFIG --ldflags --embed`
+  ], [
+    PYTHON_LDFLAGS=`$PYTHON_CONFIG --ldflags`
+  ])
+
+  AS_IF([test $? != 0], [AC_MSG_ERROR([error executing $PYTHON_CONFIG])])
   AC_SUBST([PYTHON_LDFLAGS])
   AC_MSG_RESULT([$PYTHON_LDFLAGS])
 ])
